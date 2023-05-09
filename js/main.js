@@ -6,13 +6,14 @@ import { getCellElementList,
     getReplayButtonElement,
     getCellListElement
  } from "./selectors.js";
-
+ import {checkGameStatus} from './utils.js';
+ console.log(checkGameStatus(['X', 'O', 'O', '', 'X', '', '', 'O', 'X']));
 /**
  * Global variables
  */
 let currentTurn = TURN.CROSS;
+let arrChecked=[];
 const toggleTurn = ()=>{
-    console.log(currentTurn);
     if(currentTurn == TURN.CROSS){
         currentTurn = TURN.CIRCLE;
     }else{
@@ -21,15 +22,16 @@ const toggleTurn = ()=>{
     getCurrentTurnElement().classList.remove(TURN.CROSS,TURN.CIRCLE)
     getCurrentTurnElement().classList.add(currentTurn)
 }
-const handleClickCell = (index)=>{
-    const currentElement= getCellElementAtIdx(index);
-    currentElement.classList.add(getCurrentTurnElement().getAttribute('class'));
+const handleClickCell = (cellElement,index)=>{
+    const isChecked = cellElement.classList.contains(TURN.CROSS)||cellElement.classList.contains(TURN.CIRCLE);
+    if(isChecked) return ;
+    cellElement.classList.add(getCurrentTurnElement().getAttribute('class'));
     toggleTurn();
 }
 const CellElementList =  getCellElementList();
 CellElementList.forEach((cellElement,index)=>{
     cellElement.addEventListener('click',()=>{
-        handleClickCell(index);
+        handleClickCell(cellElement,index);
     })
 })
 let isGameEnded = false;
